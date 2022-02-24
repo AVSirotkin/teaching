@@ -23,6 +23,11 @@ ui <- fluidPage(
                     min = 1,
                     max = 50,
                     value = 30),
+        actionBttn(
+            inputId = "Id110",
+            label = "Пересчитать", 
+            style = "bordered",
+            color = "success"),
         
         circle = TRUE, status = "danger",
         icon = icon("gear"), width = "300px",
@@ -41,9 +46,12 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     
     output$distPlot <- renderPlot({
+        
+        if (input$Id110 == 0)
+            return()
         # generate bins based on input$bins from ui.R
         x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+        bins <- isolate(seq(min(x), max(x), length.out = input$bins + 1))
         
         # draw the histogram with the specified number of bins
         
