@@ -30,7 +30,7 @@ ui <- fluidPage(
         tooltip = tooltipOptions(title = "Click to see inputs !")
     ),
     
-    
+    progressBar(id = "pb", value = 5000, total = 5000, status = "info", display_pct = TRUE, striped = TRUE, title = "All options"),
     # Show a plot of the generated distribution
     plotOutput("distPlot")
     
@@ -38,14 +38,20 @@ ui <- fluidPage(
 
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
-
+server <- function(input, output, session) {
+    
     output$distPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
         x    <- faithful[, 2]
         bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
+        
         # draw the histogram with the specified number of bins
+        
+        for (i in 1:5){
+            Sys.sleep(1)
+            updateProgressBar(session = session, id = "pb", value = i*1000, total = 5000)
+        }
+        
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
     })
 }
